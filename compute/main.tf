@@ -29,8 +29,8 @@ resource "aws_glue_job" "b2s_sales" {
     "--datalake-formats" = "delta"
     "--conf"             = "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"
   }
-  glue_version = "4.0"
-  worker_type  = "G.1X"
+  glue_version      = "4.0"
+  worker_type       = "G.1X"
   number_of_workers = 2
 }
 
@@ -46,8 +46,8 @@ resource "aws_glue_job" "s2g_sales" {
     "--datalake-formats" = "delta"
     "--conf"             = "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension --conf spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"
   }
-  glue_version = "4.0"
-  worker_type  = "G.1X"
+  glue_version      = "4.0"
+  worker_type       = "G.1X"
   number_of_workers = 2
 }
 

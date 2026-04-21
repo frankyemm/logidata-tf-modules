@@ -41,11 +41,11 @@ resource "aws_redshiftserverless_namespace" "warehouse" {
 }
 
 resource "aws_redshiftserverless_workgroup" "warehouse" {
-  depends_on         =[aws_redshiftserverless_namespace.warehouse]
-  namespace_name     = aws_redshiftserverless_namespace.warehouse.namespace_name
-  workgroup_name     = "${var.project_prefix}-${var.environment}-workgroup"
-  base_capacity      = 8
-  subnet_ids         = var.subnet_ids
-  security_group_ids = [var.db_security_group_id]
+  depends_on          = [aws_redshiftserverless_namespace.warehouse]
+  namespace_name      = aws_redshiftserverless_namespace.warehouse.namespace_name
+  workgroup_name      = "${var.project_prefix}-${var.environment}-workgroup"
+  base_capacity       = 8
+  subnet_ids          = var.subnet_ids
+  security_group_ids  = [var.db_security_group_id]
   publicly_accessible = true
 }
