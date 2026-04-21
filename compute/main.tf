@@ -5,15 +5,15 @@
 resource "aws_s3_object" "script_b2s" {
   bucket = var.bronze_bucket_id
   key    = "scripts/sales/bronze_to_silver_sales.py"
-  source = "../../src/domains/sales/bronze_to_silver_sales.py"
-  etag   = filemd5("../../src/domains/sales/bronze_to_silver_sales.py")
+  source = var.script_sales_b2s_path
+  etag   = filemd5(var.script_sales_b2s_path)
 }
 
 resource "aws_s3_object" "script_s2g" {
   bucket = var.bronze_bucket_id
   key    = "scripts/sales/silver_to_gold_sales.py"
-  source = "../../src/domains/sales/silver_to_gold_sales.py"
-  etag   = filemd5("../../src/domains/sales/silver_to_gold_sales.py")
+  source = var.script_sales_s2g_path
+  etag   = filemd5(var.script_sales_s2g_path)
 }
 
 # Jobs de Glue configurados para soportar Delta Lake
@@ -56,8 +56,8 @@ resource "aws_glue_job" "s2g_sales" {
 # ==========================================
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_file = "../../src/domains/logistics/lambda_iot.py"
-  output_path = "../../src/domains/logistics/lambda_iot.zip"
+  source_file = var.script_logistics_lambda_path
+  output_path = "${path.module}/lambda_iot.zip"
 }
 
 resource "aws_lambda_function" "iot_processor" {
