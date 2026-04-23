@@ -58,3 +58,31 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
+
+# Permiso gestionado por AWS para que Lambda pueda leer el Stream de Kinesis
+resource "aws_iam_role_policy_attachment" "lambda_kinesis_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole"
+}
+
+# Permiso estricto (PoLP) para escribir en DynamoDB usando un ARN predictivo (Evita dependencia circular)
+resource "aws_iam_policy" "lambda_dynamo_strict_policy" {
+  name        = "${var.project_prefix}-${var.environment}-lambda-dynamo-policy"
+  description = "Permisos estrictos para insertar en DynamoDB"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = ["dynamodb:PutItem"]
+        # Construimos el ARN usando el formato estándar de AWS porque sabemos cómo se llama la tabla
+        Resource = "arn:aws:dynamodb:*:*:table/${var.project_prefix}-${var.environment}-events"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dynamo_attach" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_dynamo_strict_policy.arn
+}
