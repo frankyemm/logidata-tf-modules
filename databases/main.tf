@@ -67,7 +67,6 @@ resource "aws_redshiftserverless_namespace" "warehouse" {
   admin_username      = "franky_admin"
   admin_user_password = random_password.db_pwd.result
   iam_roles           = [var.redshift_role_arn]
-  # AQUÍ NO VA PUBLICLY_ACCESSIBLE. BÓRRALO SI ESTÁ.
 }
 
 resource "aws_redshiftserverless_workgroup" "warehouse" {
@@ -78,5 +77,5 @@ resource "aws_redshiftserverless_workgroup" "warehouse" {
   subnet_ids         = var.subnet_ids
   security_group_ids = [var.db_security_group_id]
 
-  publicly_accessible = false
+  publicly_accessible = true
 }
