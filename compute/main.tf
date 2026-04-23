@@ -1,4 +1,28 @@
 # ==========================================
+# 0. CATÁLOGO DE DATOS Y CRAWLER
+# ==========================================
+resource "aws_glue_catalog_database" "bronze_db" {
+  name = "${var.project_prefix}_${var.environment}_bronze_db"
+}
+
+resource "aws_glue_crawler" "bronze_crawler" {
+  name          = "${var.project_prefix}-${var.environment}-bronze-crawler"
+  database_name = aws_glue_catalog_database.bronze_db.name
+  role          = var.glue_role_arn
+
+  s3_target {
+    path = "s3://${var.bronze_bucket_id}/sales/"
+  }
+
+  configuration = jsonencode({
+    Version = 1.0
+    Grouping = {
+      TableGroupingPolicy = "CombineCompatibleSchemas"
+    }
+  })
+}
+
+# ==========================================
 # 1. AWS GLUE (Dominio Ventas)
 # ==========================================
 # Subimos los scripts a S3 para que Glue los pueda leer
