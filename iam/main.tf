@@ -42,7 +42,10 @@ resource "aws_iam_role" "redshift_role" {
   })
 }
 
-# (Asignaremos la política de S3 específica para Redshift en el módulo de base de datos)
+resource "aws_iam_role_policy_attachment" "redshift_s3_readonly" {
+  role       = aws_iam_role.redshift_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
 
 # ==========================================
 # 3. ROL PARA LAMBDA (Streaming IoT)
