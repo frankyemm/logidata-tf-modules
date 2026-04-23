@@ -58,20 +58,21 @@ resource "aws_dynamodb_table" "events" {
 
 # 4. Redshift Serverless (Data Warehouse)
 resource "aws_redshiftserverless_namespace" "warehouse" {
-  namespace_name       = "${var.project_prefix}-${var.environment}-namespace"
-  db_name              = "analytics"
-  admin_username       = "franky_admin"
-  admin_user_password  = random_password.db_pwd.result
-  iam_roles            = [var.redshift_role_arn]
-  publicly_accesssible = false
+  namespace_name      = "${var.project_prefix}-${var.environment}-namespace"
+  db_name             = "analytics"
+  admin_username      = "franky_admin"
+  admin_user_password = random_password.db_pwd.result
+  iam_roles           = [var.redshift_role_arn]
+  # AQUÍ NO VA PUBLICLY_ACCESSIBLE. BÓRRALO SI ESTÁ.
 }
 
 resource "aws_redshiftserverless_workgroup" "warehouse" {
-  depends_on          = [aws_redshiftserverless_namespace.warehouse]
-  namespace_name      = aws_redshiftserverless_namespace.warehouse.namespace_name
-  workgroup_name      = "${var.project_prefix}-${var.environment}-workgroup"
-  base_capacity       = 8
-  subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.db_security_group_id]
-  publicly_accessible = true
+  depends_on         = [aws_redshiftserverless_namespace.warehouse]
+  namespace_name     = aws_redshiftserverless_namespace.warehouse.namespace_name
+  workgroup_name     = "${var.project_prefix}-${var.environment}-workgroup"
+  base_capacity      = 8
+  subnet_ids         = var.subnet_ids
+  security_group_ids = [var.db_security_group_id]
+
+  publicly_accessible = false
 }
