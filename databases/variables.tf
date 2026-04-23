@@ -9,9 +9,3 @@ variable "db_security_group_id" { type = string }
 # Variables de Seguridad (vienen del módulo iam)
 variable "redshift_role_arn" { type = string }
 
-# Secretos
-variable "db_password" {
-  description = "Contraseña maestra para BDs"
-  type        = string
-  sensitive   = true
-}
